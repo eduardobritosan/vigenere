@@ -10,8 +10,12 @@ public class Main {
         char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
         int alphabetSize= alphabet.length;
         HashMap<Character, Short> alphabetMap = new HashMap<>();
-        String M = new String("ESTE MENSAJE SE AUTODESTRUIRA").replaceAll("\\s+","");
-        String K =  new String("SOL");
+        System.out.print("Introducir el mensaje : ");
+        Scanner scanner = new Scanner(System. in);
+        String M = scanner. nextLine().replaceAll("\\s+","");
+        System.out.print("Introducir la clave : ");
+        Scanner scanner2 = new Scanner(System. in);
+        String K = scanner. nextLine();
         int kLength = K.length();
         String C = new String();
 
@@ -19,9 +23,14 @@ public class Main {
             alphabetMap.put(alphabet[i], (short) i);
         }
 
-        for (int i = 0; i < M.length(); i++) {
-            C += getKeyByValue(alphabetMap, sum(alphabetMap.get(M.charAt(i)),alphabetMap.get(K.charAt(i % kLength)),alphabetSize));
-        }
+//        for (int i = 0; i < M.length(); i++) {
+//            C += getKeyByValue(alphabetMap, sum(alphabetMap.get(M.charAt(i)),alphabetMap.get(K.charAt(i % kLength)),alphabetSize));
+//        }
+        C = cipher(C, K, M, alphabetMap, alphabetSize, kLength);
+        String DC = new String();
+        DC = decrypt(DC, K, C, alphabetMap, alphabetSize, kLength);
+
+        System.out.println("El mensaje cifrado es " + C + " y el mensaje descifrado es: " + DC);
 
 
     }
@@ -35,10 +44,32 @@ public class Main {
         return null;
     }
 
+    public static String cipher(String C, String K, String M, HashMap<Character, Short> alphabetMap, int alphabetSize, int kLength){
+        for (int i = 0; i < M.length(); i++) {
+            C += getKeyByValue(alphabetMap, sum(alphabetMap.get(M.charAt(i)),alphabetMap.get(K.charAt(i % kLength)),alphabetSize));
+        }
+        return C;
+    }
+
+    public static String decrypt(String C, String K, String M, HashMap<Character, Short> alphabetMap, int alphabetSize, int kLength){
+        for (int i = 0; i < M.length(); i++) {
+            C += getKeyByValue(alphabetMap, sub(alphabetMap.get(M.charAt(i)),alphabetMap.get(K.charAt(i % kLength)),alphabetSize));
+        }
+        return C;
+    }
+
+
+
     static int sum(int a, int b, int m)
     {
         int s = a + b;
         s = s % m;
+        return s;
+    }
+
+    static int sub(int a, int b, int m){
+        int s = a - b;
+        if (s < 0) s += m;
         return s;
     }
 
@@ -54,6 +85,8 @@ public class Main {
         }
         return ret;
     }
+
+
 
 
 }
